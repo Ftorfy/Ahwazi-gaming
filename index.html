@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AHWAZI GAMING پنل اشتراکی</title>
+<style>
+body {
+  background: #0f2027;  /* تم تیره */
+  color: #00ffc3;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+.container {
+  background: #112233;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #00ffc3;
+  text-align: center;
+  max-width: 300px;
+  width: 90%;
+}
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  border: none;
+  border-radius: 8px;
+}
+button {
+  background: #00ffc3;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #00e6b2;
+}
+.hidden {
+  display: none;
+}
+.option-btn {
+  background: #6a00ff;
+  margin: 4px;
+}
+</style>
+</head>
+<body>
+<div class="container" id="loginBox">
+  <h2>🔒 ورود به پنل AHWAZI GAMING</h2>
+  <input type="password" id="password" placeholder="رمز عبور" />
+  <button onclick="login()">ورود</button>
+</div>
+
+<div class="container hidden" id="mainBox">
+  <h2>🚀 پنل اشتراکی AHWAZI GAMING</h2>
+  <p>نسل مورد نظر را انتخاب کنید:</p>
+  <button class="option-btn" onclick="selectGen('4')">🌐 نسل چهار</button>
+  <button class="option-btn" onclick="selectGen('6')">🧬 نسل شش</button>
+  
+  <div id="formBox" class="hidden">
+    <input type="number" id="users" placeholder="تعداد کاربران" value="1" />
+    <input type="number" id="days" placeholder="تعداد روز" value="30" />
+    <input type="number" id="volume" placeholder="حجم (گیگ)" value="5" />
+    <select id="operator">
+      <option>همراه اول</option>
+      <option>ایرانسل</option>
+      <option>رایتل</option>
+    </select>
+    <button onclick="createSub()">✨ ساخت اشتراک</button>
+    <p id="result"></p>
+  </div>
+</div>
+
+<script>
+function login() {
+  const pass = document.getElementById('password').value;
+  if(pass === 'AHWAZI') {
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('mainBox').classList.remove('hidden');
+  } else {
+    alert('رمز اشتباه است');
+  }
+}
+
+let selectedGen = '';
+function selectGen(gen) {
+  selectedGen = gen;
+  document.getElementById('formBox').classList.remove('hidden');
+}
+
+function createSub() {
+  const users = document.getElementById('users').value;
+  const days = document.getElementById('days').value;
+  const volume = document.getElementById('volume').value;
+  const operator = document.getElementById('operator').value;
+
+  // آی‌پی یا دی‌ان‌اس فرضی
+  const fakeIP = selectedGen === '4' ? '188.199.78.184' : '2a00:1450:4001::abcd';
+
+  document.getElementById('result').innerText = `✅ آی‌پی نسل ${selectedGen}: ${fakeIP}`;
+}
+</script>
+</body>
+</html>
