@@ -51,6 +51,12 @@ button:hover {
 .support-btn {
   background: #0088cc;
   margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.support-btn span {
+  margin-left: 6px;
 }
 </style>
 </head>
@@ -59,6 +65,12 @@ button:hover {
   <h2>🔒 ورود به پنل AHWAZI GAMING</h2>
   <input type="password" id="password" placeholder="رمز عبور" />
   <button onclick="login()">ورود</button>
+  <a href="https://t.me/AHWAZIGAMING" target="_blank">
+    <button class="support-btn">📞 <span>پشتیبانی تلگرام</span></button>
+  </a>
+  <a href="https://t.me/AHWAZIGAMINGSHOP" target="_blank">
+    <button class="support-btn">📢 <span>کانال تلگرام</span></button>
+  </a>
 </div>
 
 <div class="container hidden" id="mainBox">
@@ -68,9 +80,9 @@ button:hover {
   <button class="option-btn" onclick="selectGen('6')">🧬 نسل شش</button>
   
   <div id="formBox" class="hidden">
-    <input type="number" id="users" placeholder="تعداد کاربران" value="1" />
-    <input type="number" id="days" placeholder="تعداد روز" value="30" />
-    <input type="number" id="volume" placeholder="حجم (گیگ)" value="5" />
+    <input type="number" id="users" placeholder="تعداد کاربران" value="" />
+    <input type="number" id="days" placeholder="تعداد روز" value="" />
+    <input type="number" id="volume" placeholder="حجم (گیگ)" value="" />
     <select id="operator">
       <option>همراه اول</option>
       <option>ایرانسل</option>
@@ -79,8 +91,12 @@ button:hover {
     <button onclick="createSub()">✨ ساخت اشتراک</button>
     <p id="result"></p>
   </div>
-  <a href="https://t.me/AHWAZIGAMING" target="_blank"><button class="support-btn">📞 پشتیبانی تلگرام</button></a>
-  <a href="https://t.me/AHWAZIGAMINGSHOP" target="_blank"><button class="support-btn">📢 کانال تلگرام</button></a>
+  <a href="https://t.me/AHWAZIGAMING" target="_blank">
+    <button class="support-btn">📞 <span>پشتیبانی تلگرام</span></button>
+  </a>
+  <a href="https://t.me/AHWAZIGAMINGSHOP" target="_blank">
+    <button class="support-btn">📢 <span>کانال تلگرام</span></button>
+  </a>
 </div>
 
 <script>
@@ -123,16 +139,17 @@ function randomIPv6() {
 }
 
 function createSub() {
-  const users = document.getElementById('users').value;
-  const days = document.getElementById('days').value;
-  const volume = document.getElementById('volume').value;
-  const operator = document.getElementById('operator').value;
-
   let resultText = '';
   if(isAdmin) {
-    const ip4 = randomIPv4();
-    const ip6 = randomIPv6();
-    resultText = `✅ آی‌پی نسل 4: ${ip4}\n✅ آی‌پی نسل 6: ${ip6}`;
+    if(selectedGen === '4') {
+      const ip1 = randomIPv4();
+      const ip2 = randomIPv4();
+      resultText = `✅ آی‌پی نسل 4 اول: ${ip1}\n✅ آی‌پی نسل 4 دوم: ${ip2}`;
+    } else if(selectedGen === '6') {
+      const ip1 = randomIPv6();
+      const ip2 = randomIPv6();
+      resultText = `✅ آی‌پی نسل 6 اول: ${ip1}\n✅ آی‌پی نسل 6 دوم: ${ip2}`;
+    }
   } else {
     if(selectedGen === '4') {
       resultText = `✅ آی‌پی نسل 4: ${randomIPv4()}`;
@@ -140,7 +157,6 @@ function createSub() {
       resultText = `✅ آی‌پی نسل 6: ${randomIPv6()}`;
     }
   }
-
   document.getElementById('result').innerText = resultText;
 }
 </script>
