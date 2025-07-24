@@ -64,9 +64,9 @@ button:hover {
   <button class="option-btn" onclick="selectGen('6')">🧬 نسل شش</button>
   
   <div id="formBox" class="hidden">
-    <input type="number" id="users" placeholder="تعداد کاربران" value="1" />
-    <input type="number" id="days" placeholder="تعداد روز" value="30" />
-    <input type="number" id="volume" placeholder="حجم (گیگ)" value="5" />
+    <input type="number" id="users" placeholder="تعداد کاربران" value="" />
+    <input type="number" id="days" placeholder="تعداد روز" value="" />
+    <input type="number" id="volume" placeholder="حجم (گیگ)" value="" />
     <select id="operator">
       <option>همراه اول</option>
       <option>ایرانسل</option>
@@ -94,16 +94,34 @@ function selectGen(gen) {
   document.getElementById('formBox').classList.remove('hidden');
 }
 
+// تابع تولید آی‌پی نسخه ۴ رندوم
+function randomIPv4() {
+  return `188.199.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
+}
+
+// تابع تولید آی‌پی نسخه ۶ رندوم
+function randomIPv6() {
+  let blocks = [];
+  for(let i=0; i<4; i++){
+    blocks.push(Math.floor(Math.random()*0xffff).toString(16));
+  }
+  return `2a00:1450:${blocks.join(':')}`;
+}
+
 function createSub() {
   const users = document.getElementById('users').value;
   const days = document.getElementById('days').value;
   const volume = document.getElementById('volume').value;
   const operator = document.getElementById('operator').value;
 
-  // آی‌پی یا دی‌ان‌اس فرضی
-  const fakeIP = selectedGen === '4' ? '188.199.78.184' : '2a00:1450:4001::abcd';
+  let ip = '';
+  if(selectedGen === '4') {
+    ip = randomIPv4();
+  } else {
+    ip = randomIPv6();
+  }
 
-  document.getElementById('result').innerText = `✅ آی‌پی نسل ${selectedGen}: ${fakeIP}`;
+  document.getElementById('result').innerText = `✅ آی‌پی نسل ${selectedGen}: ${ip}`;
 }
 </script>
 </body>
