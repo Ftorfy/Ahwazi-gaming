@@ -100,16 +100,11 @@ button:hover {
 </div>
 
 <script>
-let isAdmin = false;
 let selectedGen = '';
 
 function login() {
   const pass = document.getElementById('password').value;
   if(pass === 'AHWAZI') {
-    isAdmin = false;
-    showPanel();
-  } else if(pass === 'ERFANAHW') {
-    isAdmin = true;
     showPanel();
   } else {
     alert('رمز اشتباه است');
@@ -126,8 +121,26 @@ function selectGen(gen) {
   document.getElementById('formBox').classList.remove('hidden');
 }
 
+// رنج‌های IP واقعی از کشورهای خاورمیانه
+const middleEastRanges = [
+  {country: 'Turkey', base: '185.33.232'},   // 185.33.232.x
+  {country: 'UAE',    base: '185.50.68'},    // 185.50.68.x
+  {country: 'Bahrain',base: '185.16.200'},   // 185.16.200.x
+  {country: 'Oman',   base: '185.60.84'},    // 185.60.84.x
+  {country: 'Egypt',  base: '197.246'}       // 197.246.x.x
+];
+
 function randomIPv4() {
-  return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
+  const selected = middleEastRanges[Math.floor(Math.random() * middleEastRanges.length)];
+  if(selected.base.split('.').length === 3){
+    const last = Math.floor(Math.random()*256);
+    return `${selected.base}.${last}`;
+  } else if(selected.base.split('.').length === 2){
+    const p3 = Math.floor(Math.random()*256);
+    const p4 = Math.floor(Math.random()*256);
+    return `${selected.base}.${p3}.${p4}`;
+  }
+  return '0.0.0.0';
 }
 
 function randomIPv6() {
@@ -138,24 +151,34 @@ function randomIPv6() {
   return `2a00:1450:${blocks.join(':')}`;
 }
 
-function createSub() {
+// تست پینگ ساده با fetch
+async function pingTest(ip) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    await fetch(`http://${ip}`, { mode: 'no-cors', signal: controller.signal });
+    clearTimeout(timeoutId);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function createSub() {
+  document.getElementById('result').innerText = '⏳ در حال تست IP ...';
   let resultText = '';
-  if(isAdmin) {
-    if(selectedGen === '4') {
-      const ip1 = randomIPv4();
-      const ip2 = randomIPv4();
-      resultText = `✅ آی‌پی نسل 4 اول: ${ip1}\n✅ آی‌پی نسل 4 دوم: ${ip2}`;
-    } else if(selectedGen === '6') {
-      const ip1 = randomIPv6();
-      const ip2 = randomIPv6();
-      resultText = `✅ آی‌پی نسل 6 اول: ${ip1}\n✅ آی‌پی نسل 6 دوم: ${ip2}`;
+
+  if(selectedGen === '4') {
+    const ip = randomIPv4();
+    const ok = await pingTest(ip);
+    if(ok) {
+      resultText = `✅ آی‌پی معتبر از خاورمیانه: ${ip}`;
+    } else {
+      resultText = `❌ آی‌پی جواب نداد، دوباره امتحان کنید`;
     }
   } else {
-    if(selectedGen === '4') {
-      resultText = `✅ آی‌پی نسل 4: ${randomIPv4()}`;
-    } else {
-      resultText = `✅ آی‌پی نسل 6: ${randomIPv6()}`;
-    }
+    const ip = randomIPv6();
+    resultText = `✅ آی‌پی نسل 6 (بدون تست): ${ip}`;
   }
   document.getElementById('result').innerText = resultText;
 }
