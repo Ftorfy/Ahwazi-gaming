@@ -6,7 +6,7 @@
 <title>AHWAZI GAMING پنل اشتراکی</title>
 <style>
 body {
-  background: #0f2027;  /* تم تیره */
+  background: #0f2027;
   color: #00ffc3;
   font-family: sans-serif;
   display: flex;
@@ -22,7 +22,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 0 20px #00ffc3;
   text-align: center;
-  max-width: 300px;
+  max-width: 320px;
   width: 90%;
 }
 input, select, button {
@@ -48,6 +48,10 @@ button:hover {
   background: #6a00ff;
   margin: 4px;
 }
+.support-btn {
+  background: #0088cc;
+  margin-top: 8px;
+}
 </style>
 </head>
 <body>
@@ -64,9 +68,9 @@ button:hover {
   <button class="option-btn" onclick="selectGen('6')">🧬 نسل شش</button>
   
   <div id="formBox" class="hidden">
-    <input type="number" id="users" placeholder="تعداد کاربران" value="" />
-    <input type="number" id="days" placeholder="تعداد روز" value="" />
-    <input type="number" id="volume" placeholder="حجم (گیگ)" value="" />
+    <input type="number" id="users" placeholder="تعداد کاربران" value="1" />
+    <input type="number" id="days" placeholder="تعداد روز" value="30" />
+    <input type="number" id="volume" placeholder="حجم (گیگ)" value="5" />
     <select id="operator">
       <option>همراه اول</option>
       <option>ایرانسل</option>
@@ -75,31 +79,41 @@ button:hover {
     <button onclick="createSub()">✨ ساخت اشتراک</button>
     <p id="result"></p>
   </div>
+  <a href="https://t.me/AHWAZIGAMING" target="_blank"><button class="support-btn">📞 پشتیبانی تلگرام</button></a>
+  <a href="https://t.me/AHWAZIGAMINGSHOP" target="_blank"><button class="support-btn">📢 کانال تلگرام</button></a>
 </div>
 
 <script>
+let isAdmin = false;
+let selectedGen = '';
+
 function login() {
   const pass = document.getElementById('password').value;
   if(pass === 'AHWAZI') {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('mainBox').classList.remove('hidden');
+    isAdmin = false;
+    showPanel();
+  } else if(pass === 'ERFANAHW') {
+    isAdmin = true;
+    showPanel();
   } else {
     alert('رمز اشتباه است');
   }
 }
 
-let selectedGen = '';
+function showPanel() {
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('mainBox').classList.remove('hidden');
+}
+
 function selectGen(gen) {
   selectedGen = gen;
   document.getElementById('formBox').classList.remove('hidden');
 }
 
-// تابع تولید آی‌پی نسخه ۴ رندوم
 function randomIPv4() {
   return `188.199.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
 }
 
-// تابع تولید آی‌پی نسخه ۶ رندوم
 function randomIPv6() {
   let blocks = [];
   for(let i=0; i<4; i++){
@@ -114,14 +128,20 @@ function createSub() {
   const volume = document.getElementById('volume').value;
   const operator = document.getElementById('operator').value;
 
-  let ip = '';
-  if(selectedGen === '4') {
-    ip = randomIPv4();
+  let resultText = '';
+  if(isAdmin) {
+    const ip4 = randomIPv4();
+    const ip6 = randomIPv6();
+    resultText = `✅ آی‌پی نسل 4: ${ip4}\n✅ آی‌پی نسل 6: ${ip6}`;
   } else {
-    ip = randomIPv6();
+    if(selectedGen === '4') {
+      resultText = `✅ آی‌پی نسل 4: ${randomIPv4()}`;
+    } else {
+      resultText = `✅ آی‌پی نسل 6: ${randomIPv6()}`;
+    }
   }
 
-  document.getElementById('result').innerText = `✅ آی‌پی نسل ${selectedGen}: ${ip}`;
+  document.getElementById('result').innerText = resultText;
 }
 </script>
 </body>
